@@ -1,0 +1,29 @@
+{
+  "name": "best-of-es6",
+  "version": "1.0.0",
+  "description": "repository for Kim Hogeling's Tech Talk 'Best of ES6'",
+  "main": "arrows.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimhogeling/best-of-es6.git"
+  },
+  "keywords": [
+    "es6"
+  ],
+  "author": "kimhogeling@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kimhogeling/best-of-es6/issues"
+  },
+  "homepage": "https://github.com/kimhogeling/best-of-es6#readme",
+  "dependencies": {
+    "eslint": "^3.5.0",
+    "eslint-config-airbnb": "^11.1.0",
+    "eslint-plugin-import": "^1.15.0",
+    "eslint-plugin-jsx-a11y": "^2.2.2",
+    "eslint-plugin-react": "^6.3.0"
+  }
+}

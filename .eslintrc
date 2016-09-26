@@ -1,0 +1,30 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    }
+    # "extends": "airbnb", # Using the highly recommended rules of Airbnb https://github.com/airbnb/javascript
+    # meaning of the numbers for the rules: 0 = ignore, 1 = warn, 2 = error
+    # "rules": {
+    #     "no-console": 1, # don't error, just warn if console.log
+    #     "no-undef": 2, # don't just warn, instead error if unused vars
+    #     "eqeqeq": 2, # don't just warn, instead error if double =
+    #     "semi": 0, # we don't want to force semicolons
+    #     "indent": [1, 4], # four characters for indentations
+    #     "comma-dangle": 0, # no trailing commas
+    #     "max-len": [1, 120], # increase to 120 chars because of 4 indentation,
+    #     "no-confusing-arrow": 0, # allow conditional expression at arrow function (e.g. for templates)
+    #     "import/prefer-default-export": 0, # don't force default for modules. it's annoying
+    #     "react/require-extension": 0, # airbnb has a dependency of react require, which gives an annoying warning
+    #     "padded-blocks": 1, # don't error, just warn at padding in blocks (empty lines between `{` and `}` )
+    #     "no-use-before-define": 0, # sometimes we want functions to be able to call each other, so there is no way around this
+    #     "no-unused-vars": 1, # don't error, just warn
+    #     "no-debugger": 1, # don't error, just warn
+    #     "no-restricted-syntax": 1, # don't error, just warn
+    #     "prefer-const": 1, # don't error, just warn
+    #     "prefer-template": 1 # don't error, just warn
+    # },
+    # "globals": {
+    #     "jQuery": true
+    # }
+}
