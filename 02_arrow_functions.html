@@ -12,28 +12,32 @@
         <ol id="puns">
             <!-- TODO Find more puns -->
             <li data-badass="Arnold" data-strength="9">I'll be back</li>
-            <li  data-strength="7">I'm here to kick ass and chew bubble gum and I'm all out of gum</li>
+            <li data-badass="" data-strength="7">I'm here to kick ass and chew bubble gum and I'm all out of gum</li>
             <li data-badass="Will" data-strength="10">Welcome to earth</li>
-            <li  data-strength="?"></li>
-            <li data-badass="?" data-strength="?"></li>
-            <li data-badass="?" ></li>
-            <li data-badass="?" data-strength="?"></li>
-            <li data-badass="?" data-strength="?"></li>
-            <li data-badass="?" data-strength="?"></li>
-            <li data-badass="?" data-strength="?"></li>
-            <li data-badass="?" data-strength="?"></li>
+            <li data-badass="Arnold" data-strength="9">Hasta la vista baby</li>
+            <li data-badass="" data-strength=""></li>
+            <li data-badass="" data-strength=""></li>
+            <li data-badass="" data-strength=""></li>
+            <li data-badass="" data-strength=""></li>
+            <li data-badass="" data-strength=""></li>
+            <li data-badass="" data-strength=""></li>
+            <li data-badass="" data-strength=""></li>
         </ol>
+
+        <h3>The best puns (minimal strength of 8)</h3>
+        <ol id="best-puns"></ol>
 
         <script>
 
             // OLD
             const punsWithAMinimalGoodnessOf = function (goodness) {
-                var punNodes, punNodesWithoutIncompleteAttributes, i, len
+                var punNodes, punsThatAreGoodEnough, i, len
                 punNodes = Array.prototype.slice.call(document.querySelectorAll('#puns li'))
                 punsThatAreGoodEnough = []
                 for (i = 0, len = punNodes.length; i < len; i++) {
                     if (punNodes[i].dataset.badass && punNodes[i].dataset.strength && punNodes[i].dataset.strength|0 >= goodness) {
                         punsThatAreGoodEnough.push(punNodes[i].innerText)
+                        punsThatAreGoodEnough.push({ text: punNodes[i].innerText, strength: punNodes[i].dataset.strength})
                     }
                 }
                 return punsThatAreGoodEnough
@@ -44,7 +48,7 @@
                 Array.from(document.querySelectorAll('#puns li'))
                     .filter(({ dataset }) => dataset.badass && dataset.strength)
                     .filter(({ dataset }) => dataset.strength >= goodness)
-                    .map(({ innerText }) => innerText)
+                    .map(({ innerText, dataset }) => ({ text: innerText, strength: dataset.strength}))
 
 
             // COOL
@@ -52,20 +56,20 @@
             const punIsValid = ({ dataset }) => dataset.badass && dataset.strength
             const punIsAtLeastAsGoodAs = goodness =>
                 ({ dataset }) => dataset.strength >= goodness
-            const text = ({ innerText }) => innerText
+            const createTuple = ({ innerText, dataset }) => ({ text: innerText, strength: dataset.strength})
 
             const punsWithAMinimalGoodnessOf_Cool = goodness =>
                 $$('#puns li')
                     .filter(punIsValid)
                     .filter(punIsAtLeastAsGoodAs(goodness))
-                    .map(text)
+                    .map(createTuple)
 
 
             // AWESOME
             const punsThatAreGoodEnough = goodness =>
                 (carry, node) => {
                     if (punIsValid(node) && punIsAtLeastAsGoodAs(goodness)(node)) {
-                        carry.push(text(node))
+                        carry.push(createTuple(node))
                     }
                     return carry
                 }
@@ -75,15 +79,20 @@
 
 
             const punsWithAMinimalGoodnessOf_LessAwesome = goodness =>
-                $$('#puns li').reduce(goodness =>
+                $$('#puns li').reduce(
                     (carry, node) => {
                         if (punIsValid(node) && punIsAtLeastAsGoodAs(goodness)(node)) {
-                            carry.push(text(node))
+                            carry.push(createTuple(node))
                         }
                         return carry
-                    }, [])
+                    }, []
+                )
 
-
+            document.getElementById('best-puns').innerHTML =
+                punsWithAMinimalGoodnessOf_LessAwesome(8)
+                .sort(({ strengthL }, { strengthR }) => strengthL > strengthR)
+                .map(pun => `<li>${pun.text} (${pun.strength}/10 points)</li>`)
+                .join('')
 
             // TODO add an example that sorts by goodness
 
