@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>One-liners</title>
+        <link rel="stylesheet" href="/oneliners.css" media="all">
+    </head>
+    <body>
+
+<header>
+    <h1>Badass movie one-liners</h1>
+</header>
+
+<section>
+    <h2>Full list of all of them badass one-liners</h2>
+    <ul id="all-oneliners"><li><spinner>loading...</spinner></li></ul>
+</section>
+
+<section>
+    <h2>Damn good ones</h2>
+    <cards id="damn-good-ones"><spinner>loading...</spinner></cards>
+</section>
+
+<section>
+    <h2>Top ten</h2>
+    <table id="top-ten"><spinner>loading...</spinner></table>
+</section>
+
+
+<script>
+
+/*************
+ * Renderers *
+ *************/
+
+/**
+ * Render a given one-liner as a list item
+ */
+const renderPunAsListItem = ({ badass, strength, pun }) =>
+    `<li><quote>"${pun}"</quote> - ${badass} - ${strength}/10</li>`
+
+/**
+ * Render a given one-liner as a card
+ */
+const renderOnelinerAsCard = ({ badass, strength, pun }) =>
+    `<card>
+        <quote>${pun}</quote>
+        <badass>${badass}</badass>
+        <strength>${strength}/10</strength>
+    </card>`
+
+/**
+ * Render a given one-liner as a table row
+ */
+const renderOnelinerAsTableRow = ({ badass, strength, pun }) =>
+    `<tr>
+        <td><quote>"${pun}"</quote></td>
+        <td>${badass}</td>
+        <td>${strength}/10</td>
+    </tr>`
+
+
+/***********
+ * Filters *
+ ***********/
+
+/**
+ * Check if all wanted attributes exist
+ */
+const onelinerIsValid = ({ badass, strength, pun }) =>
+    badass && strength && pun
+
+/**
+ * Remember a given strength
+ * and return a function which can be applied to an oneliner
+ */
+const onelinerIsStrongEnough = neededStrength =>
+    ({ strength }) =>
+        strength >= neededStrength
+
+
+/***********
+ * Sorters *
+ ***********/
+
+/**
+ * Compare puns of two oneliners by alphabet
+ */
+const punSorter = (onelinerL, onelinerR) =>
+    onelinerL.pun.toLowerCase() < onelinerR.pun.toLowerCase() ? -1 : 1
+
+/**
+ * Compare strength of two oneliners
+ */
+const strengthSorter = (onelinerL, onelinerR) =>
+    onelinerL.strength > onelinerR.strength ? -1 : 1
+
+
+/*****************
+ * Data handlers *
+ *****************/
+
+/**
+ * Go through given list of puns,
+ * validate them
+ * and render them into the 'all-oneliners' node
+ */
+const injectFullListOfOneLiners = allPuns =>
+    document.getElementById('all-oneliners').innerHTML =
+        allPuns
+        .filter(onelinerIsValid)
+        .sort(punSorter)
+        .map(renderPunAsListItem)
+        .join('')
+
+/**
+ * Go through given list of puns,
+ * validate them,
+ * filter them by a given strength,
+ * sort them by strength
+ * and render them into the 'damn-good-ones' node
+ */
+const injectDamnGoodOnesAsCards = allPuns =>
+    document.getElementById('damn-good-ones').innerHTML =
+        allPuns
+        .filter(onelinerIsValid)
+        .filter(onelinerIsStrongEnough(8))
+        .sort(strengthSorter)
+        .map(renderOnelinerAsCard)
+        .join('')
+
+
+const injectTopTenAsTable = allPuns =>
+    document.getElementById('top-ten').innerHTML =
+        `<tbody>
+        <tr><th>Pun</th><th>Badass</th><th>Strength</th></tr>
+        ${allPuns
+        .filter(onelinerIsValid)
+        .sort(strengthSorter)
+        .splice(0, 10)
+        .map(renderOnelinerAsTableRow)
+        .join('')}
+        </tbody>`
+
+
+/*********
+ * STATE *
+ *********/
+
+// ⚠️ Do not modify this directly! Use the Proxy ;)
+const oneliners = {
+    puns: []
+}
+
+/**
+ * pass updates through here, to automatically validate
+ * and to also call the render functions above
+ */
+const onelinersProxy = new Proxy(oneliners, {
+    set(target, name, value) {
+
+        if (name !== 'puns') {
+            throw new Error(`You may only set the puns attribute of the oneliners object 🙈`)
+        }
+
+        if (!(value instanceof Array)) {
+            throw new Error('`puns` needs to be an array')
+        }
+
+        // console.log(value)
+
+        if (!value.every(onelinerIsValid)) {
+            throw new Error('One of the given one-liners is missing either a `badass`, `strength` or `pun` attribute')
+        }
+
+        injectFullListOfOneLiners(value)
+        injectDamnGoodOnesAsCards(value)
+        injectTopTenAsTable(value)
+
+    }
+})
+
+
+/*********************
+ * Application logic *
+ *********************/
+
+setTimeout(() =>
+    fetch('/oneliners.json')
+        .then(data => data.json())
+        .then(oneliners => onelinersProxy.puns = oneliners)
+        .catch(err => console.error('Oh no! Could not fetch oneliners, because ', err))
+, 100)
+
+</script>
+
+    </body>
+</html>
