@@ -73,10 +73,33 @@ http.createServer(function(request, response) {
         return
     }
 
+    if (request.url === '/app.js') {
+        fs.readFile('./oneliners/js/app.js', (error, html) => {
+            if (error) {
+                throw error
+            }
+            response.writeHeader(200, {
+                'Content-Type': 'application/javascript',
+                'Content-Length': html.length
+            })
+            response.write(html)
+            response.end()
+        })
+        return
+    }
+
     if (request.url === '/oneliners.json') {
-        response.write(JSON.stringify(require('./oneliners/server_files/oneliners.js')))
-        request.pipe(response)
-        response.end()
+        fs.readFile('./oneliners/js/oneliners.json', (error, html) => {
+            if (error) {
+                throw error
+            }
+            response.writeHeader(200, {
+                'Content-Type': 'text/json',
+                'Content-Length': html.length
+            })
+            response.write(html)
+            response.end()
+        })
         return
     }
 
