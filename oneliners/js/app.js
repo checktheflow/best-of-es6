@@ -152,7 +152,7 @@ const onelinersProxy = new Proxy(oneliners, {
  *********************/
 
 async function getAndInjectOneliners () {
-    onelinersProxy.puns = await fetch('/oneliners.json').then(d => d.json())
+    onelinersProxy.puns = await fetch('/oneliners/oneliners.json').then(d => d.json())
 }
 
 getAndInjectOneliners()

@@ -17,14 +17,10 @@ http.createServer(function(request, response) {
         console.error(err)
     })
 
-    // const fullPath = __dirname + request.url
 
-    // console.log(fullPath)
-    // let file = 'index.html'
-
-    // if (request.url === '/') {
-    //
-    // }
+    /**
+     * GLOBAL
+     */
 
     if (request.url === '/') {
         fs.readFile('./index.html', (error, html) => {
@@ -36,11 +32,30 @@ http.createServer(function(request, response) {
                 'Content-Length': html.length
             })
             response.write(html)
-            // response.write('./indeeex.html')
             response.end()
         })
         return
     }
+
+    if (request.url === '/favicon.ico') {
+        fs.readFile('./favicon.ico', (error, img) => {
+            if (error) {
+                throw error
+            }
+            response.writeHeader(200, {
+                'Content-Type': 'image/x-icon',
+                'Content-Length': img.length
+            })
+            response.write(img)
+            response.end()
+        })
+        return
+    }
+
+
+    /**
+     * ONELINERS
+     **/
 
     if (request.url === '/oneliners') {
         fs.readFile('./oneliners/index.html', (error, html) => {
@@ -52,14 +67,13 @@ http.createServer(function(request, response) {
                 'Content-Length': html.length
             })
             response.write(html)
-            // response.write('./indeeex.html')
             response.end()
         })
         return
     }
 
-    if (request.url === '/oneliners.css') {
-        fs.readFile('./oneliners/oneliners.css', (error, html) => {
+    if (request.url === '/oneliners/style.css') {
+        fs.readFile('./oneliners/style.css', (error, html) => {
             if (error) {
                 throw error
             }
@@ -73,7 +87,7 @@ http.createServer(function(request, response) {
         return
     }
 
-    if (request.url === '/app.js') {
+    if (request.url === '/oneliners/app.js') {
         fs.readFile('./oneliners/js/app.js', (error, html) => {
             if (error) {
                 throw error
@@ -88,7 +102,7 @@ http.createServer(function(request, response) {
         return
     }
 
-    if (request.url === '/oneliners.json') {
+    if (request.url === '/oneliners/oneliners.json') {
         fs.readFile('./oneliners/js/oneliners.json', (error, html) => {
             if (error) {
                 throw error
@@ -102,6 +116,16 @@ http.createServer(function(request, response) {
         })
         return
     }
+
+
+    /**
+     * FLIPPING CARDS
+     **/
+
+    
+
+
+
 
     console.log(`404: ${request.url}`)
     response.statusCode = 404
