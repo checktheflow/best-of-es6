@@ -100,4 +100,5 @@ th, td {
 th {
     background: #FF5722;
     color: #fff;
+    cursor: pointer;
 }
