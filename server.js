@@ -53,6 +53,23 @@ http.createServer(function(request, response) {
         return
     }
 
+    /**
+     * ARROW FUNCTIONS AND EVENTS
+     */
+    if (request.url === '/events') {
+        fs.readFile('./events.html', (error, html) => {
+            if (error) {
+                throw error
+            }
+            response.writeHeader(200, {
+                'Content-Type': 'text/html',
+                'Content-Length': html.length
+            })
+            response.write(html)
+            response.end()
+        })
+        return
+    }
 
     /**
      * ONELINERS

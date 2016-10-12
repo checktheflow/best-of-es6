@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Arrows - Events</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                font-size: 20px;
+                padding: 2em;
+                font-family: 'HelveticaNeue-Light';
+                font-weight: 300;
+            }
+            code {
+                font-family: 'Fira Code'
+            }
+        </style>
+    </head>
+    <body>
+
+
+<h1>Lexical binding!</h1>
+
+<h2>Arrow functions and <code>this</code></h2>
+<script>
+
+/* Examples of how arrow functions bind the outer `this` */
+
+const autoTogglerFunction = {
+    state: false,
+    start: function () {
+        console.log('autoTogglerFunction started', this)
+        setInterval(event => {
+            this.state = !this.state
+            console.log(this)
+        }, 700)
+    }
+}
+
+const autoTogglerArrowFunction = {
+    state: false,
+    start: () => {
+        console.log('autoTogglerArrowFunction started', this)
+        setInterval(event => {
+            this.state = !this.state
+            console.log(this)
+        }, 700)
+    }
+}
+
+const autoTogglerMethod = {
+    state: false,
+    start() {
+        console.log('autoTogglerMethod started', this)
+        setInterval(event => {
+            this.state = !this.state
+            console.log(this)
+        }, 700)
+    }
+}
+
+const autoTogglerTwoMethods = {
+    state: false,
+    toggle() {
+        this.state = !this.state
+        console.log(this)
+    },
+    start() {
+        console.log('autoTogglerTwoMethods started', this)
+        setInterval(this.toggle, 700)
+    }
+}
+
+const autoTogglerTwoMethodsWithArrow = {
+    state: false,
+    toggle() {
+        this.state = !this.state
+        console.log(this)
+    },
+    start() {
+        console.log('autoTogglerTwoMethodsWithArrow started', this)
+        setInterval(
+            () => this.toggle(),
+            700
+        )
+    }
+}
+
+</script>
+<button onclick="autoTogglerFunction.start()">autoTogglerFunction.start() 👍</button><br>
+<button onclick="autoTogglerArrowFunction.start()">autoTogglerArrowFunction.start() 👎</button><br>
+<button onclick="autoTogglerMethod.start()">autoTogglerMethod.start() 👍</button><br>
+<button onclick="autoTogglerTwoMethods.start()">autoTogglerTwoMethods.start() 👎</button><br>
+<button onclick="autoTogglerTwoMethodsWithArrow.start()">autoTogglerTwoMethodsWithArrow.start() 👍</button><br>
+
+
+<h2>Arrow functions and user events</h2>
+<button id="button1">button 1 (normal function 👍)</button><br>
+<button id="button2">button 2 (arrow function 👎)</button><br>
+<script>
+
+const deactivate = function () {
+    console.log(this)
+    this.setAttribute('disabled', 'disabled')
+}
+
+const deactivateWithArrowFunction = event => {
+    console.log(this)
+    this.setAttribute('disabled', 'disabled')
+}
+
+document.getElementById('button1')
+    .addEventListener('click', deactivate)
+
+document.getElementById('button2')
+    .addEventListener('click', deactivateWithArrowFunction)
+
+</script>
+
+
+</body>
+</html>
