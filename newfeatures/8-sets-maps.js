@@ -8,27 +8,19 @@ coworkers.add('Katja')
 coworkers.add('Jörg')
 coworkers.add('Jens')
 coworkers.add('Arthur')
-coworkers.add('Jörg')
+coworkers.add('Jörg') // added twice, no problem 👍
 coworkers.add('Max')
 
-coworkers.delete('Jens')
+console.log(coworkers.values())
 
-// console.log(coworkers.keys())
-// console.log(coworkers.values())
+coworkers.has('Jens') // true
+coworkers.delete('Jens')
+coworkers.has('Jens') // false
 
 // sets are iterables!
 for (c of coworkers) {
     console.log(c)
 }
 
-webheads = new Set(['Nicolas', 'Basti'])
-webheads.has('Max') // false
-
-const webheadNames = webheads.values()
-console.log(webheadNames.next().value)
-console.log(webheadNames.next().value)
-
-webheads.add('Robert')
-console.log(webheadNames.next().value) // 'Robert'
-
-console.log(webheadNames.next().value) // undefined
+// sets can also be made out of a given array
+const webheads = new Set(['Nicolas', 'Basti'])
