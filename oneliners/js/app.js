@@ -1,4 +1,26 @@
 
+// TODO: use es6 modules
+// import { filterOneLinerContainsValue2 } from './filters'
+
+/*************************************
+ *               STATE               *
+ * ⚠️ Do not modify these directly ⚠️ *
+ *        Use the Proxies ;)         *
+ *************************************/
+
+// This will keep the original full list
+const oneliners = []
+// This will be really changed via the proxy
+const sortState = {
+    key: 'pun',
+    direction: 1
+}
+// This will be really changed via the proxy
+const searchState = {
+    value: ''
+}
+
+
 /*************
  * Renderers *
  *************/
@@ -48,6 +70,17 @@ const onelinerIsStrongEnough = (neededStrength = 0) =>
     ({ strength = 0 }) =>
         strength >= neededStrength
 
+/**
+ * Remember given value
+ * and return a function which can be applied to an oneliner
+ */
+const filterOneLinerContainsValue = (value = '') =>
+    ({ pun: p, badass: b, strength: s }) =>
+        [p, b, s].some(
+            str =>
+                str.toString().toLowerCase().includes(value.toLowerCase())
+    )
+
 
 /***********
  * Sorters *
@@ -94,22 +127,6 @@ const sorter = (key = '', direction = 1, caller = 'noname') =>
     )(direction)
 
 
-
-/*********
- * STATE *
- *********/
-
-// ⚠️ Do not modify this directly! Use the Proxy ;)
-const oneliners = {
-    puns: []
-}
-const tableSort = {
-    currentKey: 'pun',
-    currentDirection: 1,
-    allowedKeys: ['currentKey', 'currentDirection'],
-    allowedTableHeads: ['pun', 'badass', 'strength']
-}
-
 /**
  * pass updates through here, to automatically validate
  * and to also call the render functions above
@@ -117,7 +134,7 @@ const tableSort = {
 const onelinersProxy = new Proxy(oneliners, {
     set(target, name, value) {
         if (name !== 'puns') {
-            throw new Error('🙈 You may only set the puns attribute of the oneliners object')
+            throw new Error('🙈 You may only set puns')
         }
         if (!(value instanceof Array)) {
             throw new Error('🙈 `puns` needs to be an array')
@@ -126,29 +143,41 @@ const onelinersProxy = new Proxy(oneliners, {
             throw new Error('🙈 One of the given one-liners is missing either a `badass`, `strength` or `pun` attribute')
         }
 
-        target[name] = value
-
-        injectTopTenAsList(Array.from(target.puns))
-        injectDamnGoodOnesAsCards(Array.from(target.puns))
-        injectAllAsTable(Array.from(target.puns), tableSort)
+        injectTopTenAsList(Array.from(value))
+        injectDamnGoodOnesAsCards(Array.from(value))
+        injectAllAsTable(Array.from(value), sortState)
     }
 })
 
-const tableSortProxy = new Proxy(tableSort, {
+const tableSortProxy = new Proxy(sortState, {
     set(target, name, value) {
-        if (!target.allowedKeys.includes(name)) {
-            throw new Error(`🙈 You may only set the following attributes of the tableSort object: [${tableSort.allowedKeys.join(', ')}] `)
+        const allowedKeys = ['key', 'direction']
+        if (!allowedKeys.includes(name)) {
+            throw new Error(`🙈 You may only set the following attributes of the sortState object: [${allowedKeys.join(', ')}] `)
         }
-        if (name === 'currentKey' && (typeof value !== 'string' || !target.allowedTableHeads.includes(value))) {
-            throw new Error(`🙈 currentKey needs to be a string and one of the following options: [${target.allowedTableHeads.join(', ')}] `)
+        const allowedTableHeads = ['pun', 'badass', 'strength']
+        if (name === 'key' && (typeof value !== 'string' || !allowedTableHeads.includes(value))) {
+            throw new Error(`🙈 key needs to be a string and one of the following options: [${allowedTableHeads.join(', ')}] `)
         }
-        if (name === 'currentDirection' && ![1, -1].includes(value)) {
-            throw new Error('🙈 currentDirection needs to either 1 or -1 ')
+        if (name === 'direction' && ![1, -1].includes(value)) {
+            throw new Error('🙈 direction needs to either 1 or -1 ')
         }
 
         target[name] = value
 
-        injectAllAsTable(Array.from(oneliners.puns), target)
+        injectAllAsTable(
+            Array.from(oneliners.puns.filter(filterOneLinerContainsValue(
+                document.getElementById('search').value
+            ))),
+            target
+        )
+    }
+})
+
+const searchProxy = new Proxy(searchState, {
+    set(target, name, value) {
+        target.value = value
+        onelinersProxy.puns = oneliners.puns.filter(filterOneLinerContainsValue(value))
     }
 })
 
@@ -187,9 +216,9 @@ const injectDamnGoodOnesAsCards = (puns = []) =>
 
 /**
  * @param {Array} puns A list of pun objects
- * @param {Object} tableSort The state of how to sort the table
+ * @param {Object} sortState The state of how to sort the table
  */
-const injectAllAsTable = (puns = [], { currentKey:key = 'pun', currentDirection:direction = 1 } = {}) =>
+const injectAllAsTable = (puns = [], { key = 'pun', direction = 1 } = {}) =>
     document.getElementById('all-oneliners').tBodies[0].innerHTML =
         `${puns
         .sort(sorter(key, direction))
@@ -198,28 +227,35 @@ const injectAllAsTable = (puns = [], { currentKey:key = 'pun', currentDirection:
 
 
 /**
- * Asynchronous function to fetch oneliners which returns a promise on which will be waited untill it is resolved
+ * Add event for search box
  */
-async function getAndInjectOneliners () {
-    onelinersProxy.puns = await fetch('/oneliners/oneliners.json').then(d => d.json())
-}
-
-// Ready, set, go!
-getAndInjectOneliners()
+document.getElementById('search').addEventListener('input', function () {
+    searchProxy.value = this.value
+})
 
 /**
  * Either change direction if clicked the column header which is already sorted by
  * or if clicked on a different column header sort by that criteria instead.
- * @param {MouseEvent} event The mouse event
  */
-function sortByClickedTableHeader(event) {
-    if (tableSortProxy.currentKey === this.id) {
-        tableSortProxy.currentDirection = tableSortProxy.currentDirection * -1
+function sortByClickedTableHeader() {
+    if (tableSortProxy.key === this.id) {
+        tableSortProxy.direction = tableSortProxy.direction * -1
     } else {
-        tableSortProxy.currentKey = this.id
+        tableSortProxy.key = this.id
     }
 }
-
 document.getElementById('pun').addEventListener('click', sortByClickedTableHeader)
 document.getElementById('badass').addEventListener('click', sortByClickedTableHeader)
 document.getElementById('strength').addEventListener('click', sortByClickedTableHeader)
+
+
+/**
+ * Asynchronous function to fetch oneliners which returns a promise on which will be waited untill it is resolved
+ */
+async function getAndInjectOneliners () {
+    oneliners.puns = await fetch('/oneliners/oneliners.json').then(d => d.json())
+    onelinersProxy.puns = oneliners.puns
+}
+
+// Ready, set, go!
+getAndInjectOneliners()
