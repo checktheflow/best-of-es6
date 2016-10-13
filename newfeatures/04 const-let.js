@@ -9,7 +9,7 @@
     }
 
     console.log(`Value of i outside of the for loop is ${i}`) // 5
-    console.log(`Value of j outside of the for loop is ${j}`) // ReferenceError: j is not defined
+    // console.log(`Value of j outside of the for loop is ${j}`) // ReferenceError: j is not defined
 
 }())
 

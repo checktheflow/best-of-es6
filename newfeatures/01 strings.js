@@ -5,8 +5,6 @@
 const heeeyo = 'All the devs in da house say "HEEEYO"!'
 
 
-
-
 /* String.prototype.includes */
 
 heeeyo.includes('devs') // true
@@ -15,7 +13,6 @@ heeeyo.includes('cats') // false
 /* But why not .contains() instead?
  * - Because, it would have broken mootools.
  * Thou shall not break the web! */
-
 
 
 
@@ -49,6 +46,7 @@ heeeyo.endsWith('devs', 12) // true
 /**
  * Template Strings 🎉
  **/
+
 
 // multiline with \n
 console.log(`bla , \n asdf`)
