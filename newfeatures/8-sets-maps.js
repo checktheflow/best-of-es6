@@ -1,4 +1,6 @@
 
+// TODO: add weaksets, maps and weakmaps
+
 const coworkers = new Set()
 
 coworkers.add('Melanie')
