@@ -9,6 +9,6 @@ const cowsay = whatYaSay => console.log(
                 ||----w |
                 ||     ||`)
 
-// cowsay('all thee devs in the house say heeeyo')
+cowsay('all devs in the house say heeeyo')
 
 export default cowsay
