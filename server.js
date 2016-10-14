@@ -57,7 +57,7 @@ http.createServer(function(request, response) {
      * ARROW FUNCTIONS AND EVENTS
      */
     if (request.url === '/events') {
-        fs.readFile('./events.html', (error, html) => {
+        fs.readFile('./newfeatures/5-2-arrows-events.html', (error, html) => {
             if (error) {
                 throw error
             }

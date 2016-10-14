@@ -55,3 +55,8 @@ console.log(compose(square, double)(1))
 
 console.log(compose(stringify, Math.sqrt, square, double, add)(2, 3))
 // "10"
+
+
+
+
+// arrow functions vs events example: http://localhost:8080/events
