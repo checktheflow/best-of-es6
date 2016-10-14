@@ -1,10 +1,10 @@
 {
   "name": "best-of-es6",
   "version": "1.0.0",
-  "description": "repository for Kim Hogeling's Tech Talk 'Best of ES6'",
-  "main": "arrows.js",
+  "description": "repository for Kim Hogeling's Tech Talk 'Best of ES6' at Google Developer Group DevFest 2016 in Hamburg",
+  "main": "oneliners/bundle.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "webpack": "webpack"
   },
   "repository": {
     "type": "git",
@@ -19,11 +19,13 @@
     "url": "https://github.com/kimhogeling/best-of-es6/issues"
   },
   "homepage": "https://github.com/kimhogeling/best-of-es6#readme",
-  "dependencies": {
-    "eslint": "^3.5.0",
-    "eslint-config-airbnb": "^11.1.0",
-    "eslint-plugin-import": "^1.15.0",
-    "eslint-plugin-jsx-a11y": "^2.2.2",
-    "eslint-plugin-react": "^6.3.0"
+  "dependencies": {},
+  "devDependencies": {
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-plugin-transform-async-to-generator": "^6.16.0",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-es2015": "^6.16.0",
+    "webpack": "^1.13.2"
   }
 }

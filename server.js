@@ -3,7 +3,7 @@ const http = require('http')
 const fs = require('fs')
 const util = require('util')
 
-console.log('http://localhost:8080 👾')
+console.log('http://localhost:8080')
 
 
 http.createServer(function(request, response) {
@@ -105,8 +105,23 @@ http.createServer(function(request, response) {
         return
     }
 
-    if (request.url === '/oneliners/app.js') {
-        fs.readFile('./oneliners/js/app.js', (error, js) => {
+    if (request.url === '/oneliners/bundle.js') {
+        fs.readFile('./oneliners/bundle.js', (error, js) => {
+            if (error) {
+                throw error
+            }
+            response.writeHeader(200, {
+                'Content-Type': 'application/javascript',
+                'Content-Length': js.length
+            })
+            response.write(js)
+            response.end()
+        })
+        return
+    }
+
+    if (request.url === '/oneliners/bundle.js.map') {
+        fs.readFile('./oneliners/bundle.js.map', (error, js) => {
             if (error) {
                 throw error
             }
@@ -121,7 +136,7 @@ http.createServer(function(request, response) {
     }
 
     if (request.url === '/oneliners/oneliners.json') {
-        fs.readFile('./oneliners/js/oneliners.json', (error, json) => {
+        fs.readFile('./oneliners/oneliners.json', (error, json) => {
             if (error) {
                 throw error
             }
