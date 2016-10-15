@@ -1,4 +1,3 @@
-
 function* germanCount() {
     yield 'eins'
     yield 'zwei'
@@ -20,16 +19,10 @@ console.log(germanCounter.next()) // value: undefined, done: true
 
 
 function* dutchCount() {
-    yield 'een'
-    yield 'twee'
-    yield 'drie'
-    yield 'vier'
-    yield 'vijf'
-    yield 'zes'
-    yield 'zeven'
-    yield 'acht'
-    yield 'negen'
-    yield 'tien'
+    i = 0
+    while (++i <= 10) {
+        yield `Ik heb tot ${i} geteld`
+    }
 }
 
 const dutchCounter = dutchCount()
@@ -37,6 +30,51 @@ const dutchCounter = dutchCount()
 for (let c of dutchCounter) {
     console.log(c)
 }
+
+
+
+
+
+
+function* calcInterest(money, percentage, year) {
+    while (true) {
+        money = (money * (1 + percentage / 100)).toFixed(2)
+        yield `In ${++year} you will have ${money}`
+    }
+}
+
+const moneySequence = calcInterest(1337, 4, 2016)
+console.log(moneySequence.next()) //
+console.log(moneySequence.next()) //
+console.log(moneySequence.next()) //
+
+
+
+
+
+
+
+
+function* fibonacci() {
+    let left = 0
+    let right = 1
+    while (true) {
+        const current = left
+        left = right
+        right = current + left
+        yield current
+    }
+}
+
+const sequence = fibonacci();
+console.log(sequence.next()) // 0
+console.log(sequence.next()) // 1
+console.log(sequence.next()) // 1
+console.log(sequence.next()) // 2
+console.log(sequence.next()) // 3
+console.log(sequence.next()) // 5
+
+
 
 
 
