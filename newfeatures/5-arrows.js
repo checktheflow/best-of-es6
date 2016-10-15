@@ -38,9 +38,9 @@ const add4 = (a, b) => a + b
 
 
 
-
-let amountMoneySaved =
-    products
+// 20 lines, 400 characters:
+let amountMoneySaved = function (products) {
+    return products
     .map(function (p) {
         return p.price
     })
@@ -53,34 +53,40 @@ let amountMoneySaved =
         return p.price !== p.originalPrice
     })
     .map(function (p) {
-        return p.price
+        return p.originalPrice
     })
     .reduce(function (a, b) {
         return a + b
     }, 0)
+}
+
+
+console.log(amountMoneySaved([
+    { price: 4, originalPrice: 3 },
+    { price: 5, originalPrice: 4 }
+]))
 
 
 
 
 
-
-
-let amountMoneySaved =
+// 9 lines        (-55%)
+// 230 characters (-42.5%)
+let amountMoneySaved = products =>
     products
     .map(p => p.price)
     .reduce((a, b) => a + b, 0)
     -
     products
     .filter(p => p.price !== p.originalPrice)
-    .map(p => p.price)
+    .map(p => p.originalPrice)
     .reduce((a, b) => a + b, 0)
 
 
-
-
-
-
-
+console.log(amountMoneySaved([
+    { price: 4, originalPrice: 3 },
+    { price: 5, originalPrice: 4 }
+]))
 
 
 

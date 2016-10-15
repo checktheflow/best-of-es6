@@ -12,7 +12,3 @@ const $$strings = selector =>
         // custom map function
         element => element.innerHTML
     )
-
-
-/* destructuring */
-let [first, second, , , fifth] = $$('li')

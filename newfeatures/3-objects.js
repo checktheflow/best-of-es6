@@ -1,25 +1,31 @@
 
-/* destructuring */
+// Shorthands
 
-let { top: liTop, left: liLeft } =
-    document
-    .querySelector('li')
-    .getBoundingClientRect()
+let name = 'Helge'
+let job = 'German comedian, jazz musician and multi-instrumentalist, author, film and theatre director, and actor'
 
-liTop // 520
-liLeft // 60
-
-
-
-
-/* shorthands */
-
-let liPositionNotShorthand = {
-    liTop: liTop,
-    liLeft: liLeft
+let comedian = {
+    name: name,
+    job: job
 }
 
-let liPosition = {
-    liTop,
-    liLeft
+let comedian = {
+    name,
+    job
 }
+
+
+
+
+
+
+
+
+
+let fox = {
+    say() {
+        return 'dingdingdingdingdingding'
+    }
+}
+
+console.log(fox.say()) // dingdingdingdingdingding
