@@ -36,6 +36,8 @@ for (let c of dutchCounter) {
 
 
 
+
+
 function* calcInterest(money, percentage, year) {
     while (true) {
         money = (money * (1 + percentage / 100)).toFixed(2)
@@ -44,9 +46,9 @@ function* calcInterest(money, percentage, year) {
 }
 
 const moneySequence = calcInterest(1337, 4, 2016)
-console.log(moneySequence.next()) //
-console.log(moneySequence.next()) //
-console.log(moneySequence.next()) //
+console.log(moneySequence.next()) // { value: 'In 2017 you will have 1390.48', done: false }
+console.log(moneySequence.next()) // { value: 'In 2018 you will have 1446.10', done: false }
+console.log(moneySequence.next()) // { value: 'In 2019 you will have 1503.94', done: false }
 
 
 
@@ -67,12 +69,44 @@ function* fibonacci() {
 }
 
 const sequence = fibonacci();
-console.log(sequence.next()) // 0
-console.log(sequence.next()) // 1
-console.log(sequence.next()) // 1
-console.log(sequence.next()) // 2
-console.log(sequence.next()) // 3
-console.log(sequence.next()) // 5
+console.log(sequence.next().value) // 0
+console.log(sequence.next().value) // 1
+console.log(sequence.next().value) // 1
+console.log(sequence.next().value) // 2
+console.log(sequence.next().value) // 3
+console.log(sequence.next().value) // 5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function* sprint(conversion = 0) {
+    while(++conversion) {
+        yield `After a new - develop, analyze, test, retrospect - cycle, conversion has increased to ${conversion}%`
+    }
+}
+
+const team = sprint(45)
+console.log(team.next().value)
+console.log(team.next().value)
+console.log(team.next().value)
+console.log(team.next().value)
+console.log(team.next().value)
+
+
+
+
+
 
 
 
